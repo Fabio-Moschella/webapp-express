@@ -6,10 +6,10 @@ const index = (req, res) => {
 
   connection.query(sqlMovie, (err, results) => {
     if (err) return res.status(500).json({ error: "Database query failed" });
-    res.json(results);
-  });
-  res.json({
-    description: "Reading the list of movies",
+    res.json({
+      description: "Reading the list of movies",
+      results,
+    });
   });
 };
 
@@ -27,6 +27,17 @@ const show = (req, res) => {
       return res.status(404).json({ error: "movie not found" });
 
     const movie = results[0];
+
+    const reviewsSql = `SELECT * FROM reviews WHERE movie_id = ?`;
+    // Mi scrivo la seconda query
+    connection.query(reviewsSql, [id], (err, results) => {
+      if (err) return res.status(500).json({ error: "Error executing query" });
+
+      movie.reviews = results;
+      res.json({
+        movie,
+      });
+    });
   });
 };
 
