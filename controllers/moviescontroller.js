@@ -6,9 +6,13 @@ const index = (req, res) => {
 
   connection.query(sqlMovie, (err, results) => {
     if (err) return res.status(500).json({ error: "Database query failed" });
+    const movieImgUpdate = results.map((movie) => ({
+      ...movie,
+      image: `http://localhost:3000/imgs/${movie.image}`,
+    }));
     res.json({
       description: "Reading the list of movies",
-      results,
+      movies: movieImgUpdate,
     });
   });
 };
@@ -25,8 +29,11 @@ const show = (req, res) => {
     if (err) return res.status(500).json({ error: "Database query failed" });
     if (results.length === 0)
       return res.status(404).json({ error: "movie not found" });
-
-    const movie = results[0];
+    const result = results[0];
+    const movie = {
+      ...result,
+      image: `http://localhost:3000/imgs/${result.image}`,
+    };
 
     const reviewsSql = `SELECT * FROM reviews WHERE movie_id = ?`;
     // Mi scrivo la seconda query

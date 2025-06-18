@@ -8,8 +8,8 @@ const cors = require("cors");
 const errorNotFound = require("./middleware/errorNotFound.js");
 
 //STATIC ASSEST
-// app.use(cors({ origin: "http://localhost:5173" }));
-app.use(express.static("pubblic"));
+app.use(cors({ origin: "http://localhost:5173" }));
+app.use(express.static("public"));
 app.use(express.json());
 //ROUTERS
 app.use("/movie", movieRouter);
